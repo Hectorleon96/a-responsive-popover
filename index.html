@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <section id="content-block-1" class="content-block">
+      <h2 class="content-block__title">Noticias destacadas</h2>
+
+      <p class="content-block__paragraph">
+        El desarrollo de software moderno requiere equilibrar rendimiento,
+        mantenibilidad y experiencia de usuario. Los equipos suelen iterar sobre
+        funcionalidades existentes mientras construyen nuevas capacidades para
+        sus productos.
+      </p>
+
+      <p class="content-block__paragraph">
+        A medida que las aplicaciones crecen, también aumenta la complejidad de
+        la arquitectura. Esto obliga a los desarrolladores a tomar decisiones
+        sobre escalabilidad, organización del código y separación de
+        responsabilidades.
+      </p>
+
+      <p class="content-block__paragraph">
+        La adopción de nuevas tecnologías puede ofrecer ventajas competitivas,
+        pero también introduce riesgos relacionados con aprendizaje, migraciones
+        y compatibilidad con sistemas existentes.
+      </p>
+
+      <p class="content-block__paragraph">
+        Los equipos de ingeniería suelen apoyarse en métricas para comprender el
+        comportamiento de los usuarios y detectar oportunidades de mejora dentro
+        de sus plataformas.
+      </p>
+
+      <p class="content-block__paragraph">
+        La accesibilidad y el rendimiento continúan siendo aspectos
+        fundamentales para garantizar experiencias consistentes en diferentes
+        dispositivos y condiciones de red.
+      </p>
+    </section>
+
+    <section class="container">
+      <div
+        id="popoverContainer"
+        data-position="top"
+        class="popover__container hide"
+      >
+        <div class="popover">
+          <h3 class="popover__title">Contacto</h3>
+
+          <p class="popover__description">
+            Nuestro equipo puede ayudarte con dudas relacionadas con soporte
+            técnico, integración de servicios o información general sobre la
+            plataforma.
+          </p>
+
+          <div class="popover__details">
+            <p class="popover__item">
+              <strong>Email:</strong> soporte@empresa.com
+            </p>
+
+            <p class="popover__item">
+              <strong>Horario:</strong> Lunes a Viernes, 9:00 AM - 6:00 PM
+            </p>
+
+            <p class="popover__item">
+              <strong>Respuesta promedio:</strong> Menos de 24 horas
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <button id="popover-trigger" class="popover__action">
+        Enviar mensaje
+      </button>
+    </section>
+
+    <section
+      id="content-block-2"
+      class="content-block content-block--secondary"
+    >
+      <h2 class="content-block__title">Información adicional</h2>
+
+      <p class="content-block__paragraph">
+        Las aplicaciones web modernas suelen ejecutarse en una gran variedad de
+        dispositivos, desde teléfonos móviles hasta pantallas de alta
+        resolución.
+      </p>
+
+      <p class="content-block__paragraph">
+        El diseño adaptable permite que la interfaz mantenga una experiencia
+        consistente independientemente del tamaño disponible en pantalla.
+      </p>
+
+      <p class="content-block__paragraph">
+        Las optimizaciones de rendimiento ayudan a reducir tiempos de carga y
+        mejorar la percepción de velocidad por parte de los usuarios.
+      </p>
+
+      <p class="content-block__paragraph">
+        Los sistemas interactivos requieren una gestión cuidadosa de eventos,
+        posicionamiento y actualización de elementos dentro del DOM.
+      </p>
+
+      <p class="content-block__paragraph">
+        Herramientas como ResizeObserver permiten reaccionar ante cambios de
+        tamaño sin depender exclusivamente de eventos globales asociados a la
+        ventana del navegador.
+      </p>
+
+      <p class="content-block__paragraph">
+        Comprender estos mecanismos facilita la construcción de componentes más
+        robustos y reutilizables para aplicaciones de cualquier escala.
+      </p>
+    </section>
+
+    <script>
+      const popoverTrigger = document.getElementById("popover-trigger");
+      const popoverContainer = document.getElementById("popoverContainer");
+
+      const popoverObserver = new ResizeObserver((entries) => {
+        for (let entrie of entries) {
+          if (entrie.target.nodeName === "BODY") {
+            const isPopoverVisible =
+              !popoverContainer.classList.contains("hide");
+
+            if (!isPopoverVisible) {
+              return;
+            }
+
+            resolvePopoverPosition();
+            applyPopoverStyles();
+          }
+        }
+      });
+
+      function resolvePopoverPosition() {
+        const popoverClient = popoverContainer.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        const fromTop = popoverClient.top;
+        const topFraction = popoverClient.top / viewportHeight;
+        const topPercentage = topFraction * 100;
+
+        const currentPosition = popoverContainer.dataset.position;
+
+        if (Math.round(topPercentage) <= 0 && currentPosition === "top") {
+          popoverContainer.dataset.position = "bottom";
+          return;
+        }
+
+        const fromBottom = popoverClient.bottom;
+        const bottomFraction = popoverClient.bottom / viewportHeight;
+
+        if (bottomFraction >= 1 && currentPosition === "bottom") {
+          popoverContainer.dataset.position = "top";
+        }
+      }
+
+      function applyPopoverStyles() {
+        const viewportWidth = window.innerWidth;
+
+        const MOBILE_WIDTH_PIXELS = 425;
+        const isMobile = viewportWidth <= MOBILE_WIDTH_PIXELS;
+
+        if (isMobile) {
+          const calculedWidth = `${viewportWidth - 24 * 2}px`;
+          popoverContainer.style.width = calculedWidth;
+          popoverContainer.style.maxWidth = calculedWidth;
+          popoverContainer.style.wordBreak = "all";
+        } else {
+          popoverContainer.style.width = "auto";
+          popoverContainer.style.maxWidth = "350px";
+          popoverContainer.style.wordBreak = "unset";
+        }
+      }
+
+      function popoverTriggerClick(event) {
+        event.stopPropagation();
+
+        const isVisible = !popoverContainer.classList.contains("hide");
+
+        if (isVisible) {
+          popoverContainer.classList.add("hide");
+          document.removeEventListener("scroll", resolvePopoverPosition);
+          return;
+        }
+
+        document.addEventListener("scroll", resolvePopoverPosition);
+        popoverContainer.classList.remove("hide");
+        applyPopoverStyles();
+        resolvePopoverPosition();
+      }
+
+      function clickOutside(event) {
+        const withinBoundaries = event
+          .composedPath()
+          .includes(popoverContainer);
+
+        const isPopoverVisible = popoverContainer.classList.contains("hide");
+
+        if (withinBoundaries === false && isPopoverVisible === false) {
+          popoverContainer.classList.add("hide");
+        }
+      }
+
+      popoverObserver.observe(document.querySelector("body"));
+      document.addEventListener("click", clickOutside);
+      popoverTrigger.addEventListener("click", popoverTriggerClick);
+    </script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0px;
+      }
+
+      .box {
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      .container {
+        position: relative;
+        padding: 0px 24px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .popover__container {
+        width: 100%;
+        max-width: 300px;
+        position: absolute;
+        background-color: #d4d4d4;
+        border-radius: 8px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .popover__action {
+        background-color: #222;
+        color: #fff;
+        width: 100%;
+        max-width: 200px;
+        padding: 8px 0px;
+      }
+
+      [data-position="top"] {
+        bottom: 100%;
+        top: unset;
+        margin-bottom: 8px;
+      }
+
+      [data-position="bottom"] {
+        top: 100%;
+        bottom: unset;
+        margin-top: 8px;
+      }
+
+      .content-block {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 48px 24px;
+        min-height: 100vh;
+      }
+
+      .content-block--secondary {
+        padding-top: 64px;
+        padding-bottom: 64px;
+      }
+
+      .content-block__title {
+        margin: 0 0 24px;
+        font-size: 2rem;
+        line-height: 1.2;
+      }
+
+      .content-block__paragraph {
+        margin: 0 0 24px;
+        line-height: 1.8;
+        font-size: 1rem;
+      }
+
+      .popover {
+        padding: 16px;
+      }
+
+      .popover__title {
+        margin: 0 0 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .popover__description {
+        margin: 0 0 16px;
+        line-height: 1.5;
+        font-size: 0.95rem;
+      }
+
+      .popover__details {
+        margin-bottom: 16px;
+      }
+
+      .popover__item {
+        margin: 0 0 8px;
+        line-height: 1.4;
+        font-size: 0.9rem;
+      }
+
+      .popover__action {
+        width: 100%;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 12px;
+        cursor: pointer;
+        font-size: 0.95rem;
+      }
+    </style>
+  </body>
+</html>

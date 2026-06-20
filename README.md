@@ -2,6 +2,14 @@
 
 A lightweight popover component built with Vanilla JavaScript, HTML and CSS.
 
+## Live Demo
+
+https://hectorleon96.github.io/a-responsive-popover/
+
+## Repository
+
+https://github.com/Hectorleon96/a-responsive-popover
+
 The goal of this project is to create a floating popover that automatically adapts to the available viewport space without relying on external libraries or frameworks.
 
 ## Overview

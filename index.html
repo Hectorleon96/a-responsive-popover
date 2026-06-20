@@ -47,6 +47,7 @@
       <div
         id="popoverContainer"
         data-position="top"
+        aria-hidden="true"
         class="popover__container hide"
       >
         <div class="popover">
@@ -74,7 +75,12 @@
         </div>
       </div>
 
-      <button id="popover-trigger" class="popover__action">
+      <button
+        id="popover-trigger"
+        aria-expanded="false"
+        aria-controls="popoverContainer"
+        class="popover__action"
+      >
         Enviar mensaje
       </button>
     </section>
